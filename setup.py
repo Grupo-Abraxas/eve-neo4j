@@ -10,7 +10,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    'Eve>=0.6'
 ]
 
 test_requirements = [
@@ -24,7 +24,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Rodrigo Rodriguez",
     author_email='rrodriguez@grupoabraxas.com',
-    url='https://github.com/rodrigorn/eve_neo4j',
+    url='https://github.com/Abraxas-Biosystems/eve-neo4j',
     packages=[
         'eve_neo4j',
     ],
@@ -48,6 +48,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite='tests',
+    test_suite='eve_neo4j.tests',
     tests_require=test_requirements
 )
