@@ -10,11 +10,13 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Eve>=0.6'
+    'Eve',
+    'flask-neo4j',
+    'py2neo'
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    'pytest'
 ]
 
 setup(
@@ -27,6 +29,9 @@ setup(
     url='https://github.com/Abraxas-Biosystems/eve-neo4j',
     packages=[
         'eve_neo4j',
+    ],
+    dependency_links = [
+        'http://github.com/rodrigorn/flask-neo4j/tarball/master#egg=flask-neo4j'
     ],
     package_dir={'eve_neo4j':
                  'eve_neo4j'},
