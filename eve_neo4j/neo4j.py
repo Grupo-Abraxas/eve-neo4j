@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import uuid
+
 from eve.io.base import DataLayer
 from flask.ext import neo4j
 from py2neo import NodeSelector
 
 from eve_neo4j.structures import Neo4jResultCollection
+from eve_neo4j.utils import label, id_field, dict_to_node, node_to_dict
 
 
 class Neo4j(DataLayer):
@@ -41,3 +44,20 @@ class Neo4j(DataLayer):
             selected = selected.skip((req.page - 1) * req.max_results)
 
         return Neo4jResultCollection(selected)
+
+    def insert(self, resource, doc_or_docs):
+        """ Inserts a document as a node with a label.
+
+        :param resource: resource being accessed.
+        :param doc_or_docs: json document or list of json documents to be added
+                            to the database.
+        """
+        indexes = []
+        lb = label(resource)
+        for document in doc_or_docs:
+            node = dict_to_node(lb, document)
+            _id = str(uuid.uuid4())
+            node[id_field(resource)] = _id
+            self.driver.graph.create(node)
+            indexes.append(_id)
+        return indexes
