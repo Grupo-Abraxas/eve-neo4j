@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 from copy import copy
 from datetime import datetime
 from eve.utils import config
@@ -15,6 +17,13 @@ def node_to_dict(node):
             node[config.LAST_UPDATED])
 
     return node
+
+
+def timestamp(value):
+    try:
+        return value.timestamp()
+    except AttributeError:
+        return time.mktime(value.timetuple())
 
 
 def count_selection(selection, with_limit_and_skip=False):
