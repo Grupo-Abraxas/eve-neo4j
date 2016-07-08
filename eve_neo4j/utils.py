@@ -34,3 +34,13 @@ def count_selection(selection, with_limit_and_skip=False):
     query, params = selection._query_and_parameters
     query = query.replace("RETURN _", "RETURN COUNT(_)")
     return selection.graph.evaluate(query, params)
+
+
+def id_field(resource):
+    return config.DOMAIN[resource].get('id_field', config.ID_FIELD)
+
+
+def label(resource):
+    if 'datasource' in config.DOMAIN[resource]:
+        return config.DOMAIN[resource]['datasource'].get('source', resource)
+    return resource
