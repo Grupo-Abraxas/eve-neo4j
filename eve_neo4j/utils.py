@@ -4,6 +4,7 @@ import time
 from copy import copy
 from datetime import datetime
 from eve.utils import config
+from py2neo import Node
 
 
 def node_to_dict(node):
@@ -17,6 +18,17 @@ def node_to_dict(node):
             node[config.LAST_UPDATED])
 
     return node
+
+
+def dict_to_node(label, properties={}):
+    props = copy(properties)
+    if config.DATE_CREATED in props:
+        props[config.DATE_CREATED] = timestamp(props[config.DATE_CREATED])
+
+    if config.LAST_UPDATED in props:
+        props[config.LAST_UPDATED] = timestamp(props[config.LAST_UPDATED])
+
+    return Node(label, **props)
 
 
 def timestamp(value):
