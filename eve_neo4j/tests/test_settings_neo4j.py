@@ -1,7 +1,8 @@
-ID_FIELD = 'ID'
+ID_FIELD = '_id'
 ITEM_LOOKUP = True
 ITEM_LOOKUP_FIELD = ID_FIELD
 
+ALLOW_UNKNOWN = True
 
 GRAPH_DATABASE = 'http://localhost:7474/db/data/'
 GRAPH_USER = 'neo4j'
