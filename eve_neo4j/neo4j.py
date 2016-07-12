@@ -45,6 +45,27 @@ class Neo4j(DataLayer):
 
         return Neo4jResultCollection(selected)
 
+    def find_one(self, resource, req, **lookup):
+        """ Retrieves a single document/record. Consumed when a request hits an
+        item endpoint (`/people/id/`).
+
+        :param resource: resource being accessed. You should then use the
+                         ``datasource`` helper function to retrieve both the
+                         db collection/table and base query (filter), if any.
+        :param req: an instance of ``eve.utils.ParsedRequest``. This contains
+                    all the constraints that must be fulfilled in order to
+                    satisfy the original request (where and sort parts, paging,
+                    etc). As we are going to only look for one document here,
+                    the only req attribute that you want to process here is
+                    ``req.projection``.
+
+        :param **lookup: the lookup fields. This will most likely be a record
+                         id or, if alternate lookup is supported by the API,
+                         the corresponding query.
+        """
+        document = self.driver.select(resource, **lookup).first()
+        return node_to_dict(document) if document else None
+
     def insert(self, resource, doc_or_docs):
         """ Inserts a document as a node with a label.
 

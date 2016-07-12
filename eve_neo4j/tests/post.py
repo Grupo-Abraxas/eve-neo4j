@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
-from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, DATE_CREATED, ISSUES, \
+from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, ISSUES, \
     STATUS, ETAG
-from pprint import pprint
 
 from eve_neo4j.tests import TestBaseNeo4j
 
@@ -26,9 +25,9 @@ class TestPostNeo4j(TestBaseNeo4j):
         r = self.perform_post(data)
         item_id = r[ID_FIELD]
         item_etag = r[ETAG]
-        # db_value = self.compare_post_with_get(item_id, [test_field, ETAG])
-        # self.assertEqual(db_value[0], test_value)
-        # self.assertEqual(db_value[1], item_etag)
+        db_value = self.compare_post_with_get(item_id, [test_field, ETAG])
+        self.assertEqual(db_value[0], test_value)
+        self.assertEqual(db_value[1], item_etag)
 
     def assertPostResponse(self, response, valid_items=[0], resource=None):
         if '_items' in response:

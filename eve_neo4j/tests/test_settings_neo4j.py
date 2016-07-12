@@ -1,6 +1,7 @@
 ID_FIELD = '_id'
 ITEM_LOOKUP = True
 ITEM_LOOKUP_FIELD = ID_FIELD
+ITEM_URL = 'regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")'
 
 ALLOW_UNKNOWN = True
 

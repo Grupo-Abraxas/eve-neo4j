@@ -47,3 +47,23 @@ class TestGetNeo4j(TestBaseNeo4j):
         self.assertLastLink(links, None)
         self.assertPagination(response, 5, 101, 25)
 
+
+class TestGetItem(TestBaseNeo4j):
+
+    def assertItemResponse(self, response, status, resource=None):
+        self.assert200(status)
+        self.assertTrue(self.app.config['ETAG'] in response)
+        links = response['_links']
+        self.assertEqual(len(links), 3)
+        self.assertHomeLink(links)
+        self.assertCollectionLink(links, resource or self.known_resource)
+        self.assertItem(response, resource or self.known_resource)
+
+    def test_getitem_by_id(self):
+        response, status = self.get(self.known_resource,
+                                    item=self.item_id)
+        self.assertItemResponse(response, status)
+
+        response, status = self.get(self.known_resource,
+                                    item=self.unknown_item_id)
+        self.assert404(status)

@@ -3,8 +3,10 @@ import eve
 import os
 import random
 import string
+import uuid
 
 from datetime import datetime
+from eve import ETAG
 from eve.tests import TestMinimal
 from py2neo import Node
 
@@ -34,6 +36,24 @@ class TestBaseNeo4j(TestMinimal):
         self.empty_resource = 'empty'
         self.empty_resource_url = '/%s' % self.empty_resource
 
+        response, _ = self.get(self.known_resource, '?max_results=2')
+        person = self.response_item(response)
+        self.item = person
+        self.item_id = self.item[self.app.config['ID_FIELD']]
+        self.item_firstname = self.item['firstname']
+        self.item_etag = self.item[ETAG]
+        self.item_id_url = ('/%s/%s' %
+                            (self.domain[self.known_resource]['url'],
+                             self.item_id))
+
+        self.unknown_item_id = '05ced1a0-b16f-4ae8-8432-a80a84a947b2'
+
+    def response_item(self, response, i=0):
+        if self.app.config['HATEOAS']:
+            return response['_items'][i]
+        else:
+            return response[i]
+
     def setupDB(self):
         self.graph = self.app.data.driver.graph
         self.bulk_insert()
@@ -56,6 +76,7 @@ class TestBaseNeo4j(TestMinimal):
                 dt = time.mktime(datetime.now().timetuple())
             person['_created'] = dt
             person['_updated'] = dt
+            person['_id'] = str(uuid.uuid4())
             self.graph.create(person)
 
     def random_string(self, length=6):
