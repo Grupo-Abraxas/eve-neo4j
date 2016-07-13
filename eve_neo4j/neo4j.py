@@ -82,3 +82,21 @@ class Neo4j(DataLayer):
             self.driver.graph.create(node)
             indexes.append(_id)
         return indexes
+
+    def remove(self, resource, lookup={}):
+        """ Removes a node or an entire set of nodes from a graph label.
+
+        :param resource: resource being accessed. You should then use
+                         the ``datasource`` helper function to retrieve
+                         the actual datasource name.
+        :param lookup: a dict with the query that documents must match in order
+                       to qualify for deletion. For single document deletes,
+                       this is usually the unique id of the document to be
+                       removed.
+        """
+        datasource, filter_, _, _ = self._datasource_ex(resource, lookup)
+        nodes = self.driver.select(datasource, **filter_)
+        tx = self.driver.graph.begin()
+        for node in nodes:
+            tx.delete(node)
+        tx.commit()
