@@ -2,6 +2,8 @@
 import uuid
 
 from eve.io.base import DataLayer
+from eve.utils import debug_error_message
+from flask import abort
 from flask.ext import neo4j
 from py2neo import NodeSelector
 
@@ -82,6 +84,33 @@ class Neo4j(DataLayer):
             self.driver.graph.create(node)
             indexes.append(_id)
         return indexes
+
+    def replace(self, resource, id_, document, original):
+        """ Replaces a graph node.
+
+        :param resource: resource being accessed.
+        :param id_: the unique id of the node.
+        :param document: the new json document
+        :param original: definition of the json document that should be
+                         updated.
+        :raise OriginalChangedError: raised if the database layer notices a
+                                     change from the supplied `original`
+                                     parameter.
+        """
+        label, _, _, _ = self._datasource_ex(resource, [])
+        id_field = self.app.config['ID_FIELD']
+        filter_ = {id_field: id_}
+        old_node = self.driver.select(label, **filter_).first()
+
+        # Delete the old node
+        if old_node is None:
+            abort(500, description=debug_error_message('Object not existent'))
+        self.driver.graph.delete(old_node)
+
+        # create and insert the new one
+        node = dict_to_node(label, document)
+        node[id_field] = id_
+        self.driver.graph.create(node)
 
     def remove(self, resource, lookup={}):
         """ Removes a node or an entire set of nodes from a graph label.
