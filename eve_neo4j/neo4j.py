@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 
+from datetime import datetime
 from eve.io.base import DataLayer
 from eve.utils import debug_error_message
 from flask import abort
@@ -8,7 +9,8 @@ from flask.ext import neo4j
 from py2neo import NodeSelector
 
 from eve_neo4j.structures import Neo4jResultCollection
-from eve_neo4j.utils import label, id_field, dict_to_node, node_to_dict
+from eve_neo4j.utils import label, id_field, dict_to_node, node_to_dict, \
+    timestamp
 
 
 class Neo4j(DataLayer):
@@ -84,6 +86,29 @@ class Neo4j(DataLayer):
             self.driver.graph.create(node)
             indexes.append(_id)
         return indexes
+
+    def update(self, resource, id_, updates, original):
+        """ Updates a graph node.
+        :param resource: resource being accessed.
+        :param id_: the unique id of the node.
+        :param updates: json updates to be performed on the node.
+        :param original: definition of the json document that should be
+        updated.
+        :raise OriginalChangedError: raised if the database layer notices a
+        change from the supplied `original` parameter.
+        """
+        label, _, _, _ = self._datasource_ex(resource, [])
+        id_field = self.app.config['ID_FIELD']
+        filter_ = {id_field: id_}
+        node = self.driver.select(label, **filter_).first()
+        if node is None:
+            abort(500, description=debug_error_message('Object not existent'))
+        # node = node_to_dict(node)
+        for k, v in updates.items():
+            if isinstance(v, datetime):
+                v = timestamp(v)
+            node[k] = v
+        self.driver.graph.push(node)
 
     def replace(self, resource, id_, document, original):
         """ Replaces a graph node.
