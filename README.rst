@@ -6,8 +6,8 @@ eve-neo4j
 .. image:: https://img.shields.io/pypi/v/eve_neo4j.svg
         :target: https://pypi.python.org/pypi/eve_neo4j
 
-.. image:: https://img.shields.io/travis/rodrigorn/eve_neo4j.svg
-        :target: https://travis-ci.org/rodrigorn/eve_neo4j
+.. image:: https://travis-ci.org/Abraxas-Biosystems/eve-neo4j.svg?branch=master
+    :target: https://travis-ci.org/Abraxas-Biosystems/eve-neo4j
 
 .. image:: https://readthedocs.org/projects/eve-neo4j/badge/?version=latest
         :target: https://eve-neo4j.readthedocs.io/en/latest/?badge=latest
