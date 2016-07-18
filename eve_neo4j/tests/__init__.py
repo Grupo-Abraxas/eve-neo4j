@@ -47,6 +47,19 @@ class TestBaseNeo4j(TestMinimal):
                              self.item_id))
 
         self.unknown_item_id = '05ced1a0-b16f-4ae8-8432-a80a84a947b2'
+        self.unknown_resource = 'unknown'
+        self.unknown_resource_url = '/%s' % self.unknown_resource
+
+        self.readonly_resource = 'payments'
+        self.readonly_resource_url = (
+            '/%s' % self.domain[self.readonly_resource]['url'])
+
+        response, _ = self.get('payments', '?max_results=1')
+        self.readonly_id = self.response_item(response)['_id']
+        self.readonly_id_url = ('%s/%s' % (self.readonly_resource_url,
+                                           self.readonly_id))
+
+        # self.epoch = date_to_str(datetime(1970, 1, 1))
 
     def response_item(self, response, i=0):
         if self.app.config['HATEOAS']:
@@ -78,6 +91,34 @@ class TestBaseNeo4j(TestMinimal):
             person['_updated'] = dt
             person['_id'] = str(uuid.uuid4())
             self.graph.create(person)
+
+        # load random invoice
+        try:
+            dt = datetime.now().timestamp()
+        except AttributeError:
+            import time
+            dt = time.mktime(datetime.now().timetuple())
+        invoice = Node('invoice', number=random.randint(0, 100))
+        invoice['people_id'] = people[0]['_id']
+        invoice['_created'] = dt
+        invoice['_updated'] = dt
+        invoice['_id'] = str(uuid.uuid4())
+        self.graph.create(invoice)
+
+        # load random payments
+        for _ in range(10):
+            payment = Node(
+                'payments', number=random.randint(0, 100),
+                string=self.random_string(6))
+            try:
+                dt = datetime.now().timestamp()
+            except AttributeError:
+                import time
+                dt = time.mktime(datetime.now().timetuple())
+            payment['_created'] = dt
+            payment['_updated'] = dt
+            payment['_id'] = str(uuid.uuid4())
+            self.graph.create(payment)
 
     def random_string(self, length=6):
         return ''.join(random.choice(string.ascii_lowercase)
