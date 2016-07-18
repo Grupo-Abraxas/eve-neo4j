@@ -10,8 +10,8 @@ eve-neo4j
     :target: https://travis-ci.org/Abraxas-Biosystems/eve-neo4j
 
 .. image:: https://readthedocs.org/projects/eve-neo4j/badge/?version=latest
-        :target: https://eve-neo4j.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+    :target: http://eve-neo4j.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/rodrigorn/cookiecutter-django/shield.svg
      :target: https://pyup.io/repos/github/rodrigorn/eve_neo4j/
