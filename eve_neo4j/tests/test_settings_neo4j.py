@@ -24,13 +24,49 @@ people = {
                 'embeddable': True,
                 'resource': 'invoices'
             }
+        },
+        'prog': {
+            'type': 'integer'
+        },
+        'firstname': {
+            'type': 'string'
+        },
+        'title': {
+            'type': 'string',
+            'default': 'Mr.'
         }
     }
 }
 
+# flake8: noqa
+import copy
+users = copy.deepcopy(people)
+users['url'] = 'users'
+users['datasource'] = {'source': 'people',
+                       'filter': 'prog < 5'}
+users['resource_methods'] = ['DELETE', 'POST', 'GET']
+users['item_title'] = 'user'
+
+users_overseas = copy.deepcopy(users)
+users_overseas['url'] = 'users/overseas'
+users_overseas['datasource'] = {'source': 'people'}
+
 invoices = {}
+
+user_invoices = copy.deepcopy(invoices)
+user_invoices['url'] = 'users/<regex("[0-9]+"):people>/invoices'
+user_invoices['datasource'] = {'source': 'invoices'}
+
+payments = {
+    'resource_methods': ['GET'],
+    'item_methods': ['GET'],
+}
 
 DOMAIN = {
     'people': people,
-    'invoices': invoices
+    'users': users,
+    'users_overseas': users_overseas,
+    'invoices': invoices,
+    'userinvoices': user_invoices,
+    'payments': payments
 }
