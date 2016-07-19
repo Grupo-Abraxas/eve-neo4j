@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import eve
+import itertools
 import os
 import random
 import string
@@ -73,10 +74,18 @@ class TestBaseNeo4j(TestMinimal):
 
     def tearDown(self):
         self.dropGraph()
+        self.dropIndexes()
         del self.app
 
     def dropGraph(self):
         self.graph.delete_all()
+
+    def dropIndexes(self):
+        schema = self.graph.schema
+        for label in itertools.chain(
+                self.graph.node_labels, self.graph.relationship_types):
+            for property_ in schema.get_uniqueness_constraints(label):
+                schema.drop_uniqueness_constraint(label, property_)
 
     def bulk_insert(self):
         people = self.random_people(self.known_resource_count)
