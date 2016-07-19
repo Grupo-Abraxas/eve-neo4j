@@ -14,7 +14,7 @@ To install eve-neo4j, run this command in your terminal:
 
     $ pip install eve_neo4j
 
-This is the preferred method to install eve-neo4j, as it will always install the most recent stable release. 
+This is the preferred method to install eve-neo4j, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/rodrigorn/eve_neo4j
+    $ git clone git@github.com:Abraxas-Biosystems/eve-neo4j.git
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/rodrigorn/eve_neo4j/tarball/master
+    $ curl  -OL https://github.com/Abraxas-Biosystems/eve-neo4j/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/rodrigorn/eve_neo4j
-.. _tarball: https://github.com/rodrigorn/eve_neo4j/tarball/master
+.. _Github repo: https://github.com/Abraxas-Biosystems/eve-neo4j
+.. _tarball: https://github.com/Abraxas-Biosystems/eve-neo4j/tarball/master
