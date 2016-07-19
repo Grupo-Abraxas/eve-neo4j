@@ -2,6 +2,7 @@ import datetime
 import json
 
 from eve.utils import date_to_str, str_to_date
+from py2neo import Node
 
 from eve_neo4j.tests import TestBaseNeo4j
 
@@ -351,20 +352,16 @@ class TestGetNeo4j(TestBaseNeo4j):
         """Documents created outside the API context could be lacking the
         LAST_UPDATED and/or DATE_CREATED fields.
         """
-        _db = self.app.data.driver
+        graph = self.app.data.driver.graph
         firstname = 'Douglas'
-        person = self.test_sql_tables.People(firstname=firstname,
-                                             lastname='Adams', prog=1)
-        _db.session.add(person)
-        _db.session.flush()
+        person = Node('people', firstname=firstname, lastname='Adams', prog=1)
+        graph.create(person)
         where = '{"firstname": "%s"}' % firstname
         response, status = self.get(self.known_resource, '?where=%s' % where)
         self.assert200(status)
         resource = response['_items']
         self.assertEqual(len(resource), 1)
         self.assertItem(resource[0])
-
-        _db.session.rollback()
 
     def test_get_embedded(self):
         _db = self.app.data.driver
