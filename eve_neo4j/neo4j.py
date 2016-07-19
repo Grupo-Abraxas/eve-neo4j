@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import uuid
 
 from datetime import datetime
@@ -39,7 +40,12 @@ class Neo4j(DataLayer):
                     supports both Python and Mongo-like query syntaxes.
         :param sub_resource_lookup: sub-resoue lookup from the endpoint url.
         """
-        selected = self.driver.select(resource)
+        label, filter_, fields, sort = self._datasource_ex(resource, [])
+        selected = self.driver.select(label)
+
+        if req.where:
+            properties = json.loads(req.where)
+            selected = selected.where(**properties)
 
         if req.max_results:
             selected = selected.limit(req.max_results)
