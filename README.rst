@@ -13,10 +13,13 @@ eve-neo4j
     :target: http://eve-neo4j.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/rodrigorn/cookiecutter-django/shield.svg
-     :target: https://pyup.io/repos/github/rodrigorn/eve_neo4j/
+.. image:: https://pyup.io/repos/github/abraxas-biosystems/eve-neo4j/shield.svg
+     :target: https://pyup.io/repos/github/abraxas-biosystems/eve-neo4j/
      :alt: Updates
 
+.. image:: https://pyup.io/repos/github/abraxas-biosystems/eve-neo4j/python-3-shield.svg
+     :target: https://pyup.io/repos/github/abraxas-biosystems/eve-neo4j/
+     :alt: Python 3
 
 Eve Neo4j extension.
 
