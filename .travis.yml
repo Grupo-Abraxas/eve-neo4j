@@ -20,3 +20,26 @@ before_install:
 install: pip install -U tox
 
 script: tox -e ${TOXENV}
+
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: rodrigorn
+  password:
+    secure: !!binary |
+      RlNlZCtlKzI0QXVCZlVYWFNKbmxCUjVJVDN3N0dUOEovSEhiWUxNRGZZSEVOaldhQnVtbGJOdXcy
+      anZkVnFudW9OSDFwU1FrY050UkdJYmNIVmp6ODhnNDQ3UnlzdmNIbG1uZk5iVHRjdm5uTDVWdWU4
+      SHpvS0VBdDZnQUczY1Z3MzVycEViY0FhN3lOMSs3ZmZBa0pZT09pRmhzOEVxTWRyTXV4dkEzVHRN
+      enlaa3VqcGpaMTlaWldPbkdzeTZWdDRZUjRBbVNCVy9ISkU2aTl2ZXNONktLWkxtYWRVSCtHYjkr
+      YmdLcTg4ZmlLTXBFYW5oWEhseHJYZEJFZkw1bTZUNVpjK0RZY2ZFZjVpY0tNVW9VQi9WZWthRW9Y
+      WEFYUm14Q3F5RkZ6WlR2aWllZlZkTmJwYUc5Q0VVRTZiTU5sd2pVUFlEbkRYTndMc2k3WENDdGpT
+      bW9sT1JjWURUZ1FDYUNIV1VNOGNXRmF5TUhGQ0hNZmdPRTgxQ1VBTXpQbXdtN0RPejlnNWovN2JV
+      SnNJZm1qVjZYditCbUh0QjZ6TjF5WHhRUDlDbENyTGNUbGI3dWVtV3hUN3kzM0ZvbzNzRHk1VTIz
+      b2o4L0xVYzZJZnNXODdzV3psaTFWcGdLWUpJNk5VVUtxNTcrREMyYkZ0WjVLbjc5ZzdoZ1RlUjBS
+      b3NFMW1FRzJBZ0RicXlmZjZiS1F4KzVTSHhRVTVDSVpBY0NmbFZtSnlPSklFWFFSZW1nYSs3QjNR
+      eHJ5a25qMDJ0eEVBRnk1WWVHOERFRDBySzlUbEw4TWtBNHdqSWY3Mlhwc1dlSzVoZXNkQnE5ZGEw
+      Wjhwalo2cXYzRGJDMzFwK0VwRDE3dTlNTjFsWlBJZUFoL01lTmtBSmFBb2VzU3ZUSEZqdTRnZGc9
+  on:
+    tags: true
+    repo: Abraxas-Biosystems/eve-neo4j
+    condition: $TOXENV == py35
