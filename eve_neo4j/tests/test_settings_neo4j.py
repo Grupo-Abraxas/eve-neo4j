@@ -55,7 +55,7 @@ invoices = {}
 
 user_invoices = copy.deepcopy(invoices)
 user_invoices['url'] = 'users/<regex("[0-9]+"):people>/invoices'
-user_invoices['datasource'] = {'source': 'Invoices'}
+user_invoices['datasource'] = {'source': 'invoices'}
 
 payments = {
     'resource_methods': ['GET'],
