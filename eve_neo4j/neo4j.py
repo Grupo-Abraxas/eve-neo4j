@@ -24,6 +24,30 @@ class Neo4j(DataLayer):
         graph = neo4j.Neo4j(app).gdb
         self.driver = NodeSelector(graph)
 
+        self.register_schema(app)
+
+    def register_schema(self, app):
+        """Register schema for Neo4j indexes.
+
+        :param app: Flask application instance.
+        """
+        for k, v in app.config['DOMAIN'].items():
+            if 'datasource' in v and 'source' in v['datasource']:
+                label = v['datasource']['source']
+            else:
+                label = k
+
+            if 'id_field' in v:
+                id_field = v['id_field']
+            else:
+                id_field = app.config['ID_FIELD']
+
+            try:
+                self.driver.graph.schema.create_uniqueness_constraint(
+                    label, id_field)
+            except Exception:
+                pass
+
     def find(self, resource, req, sub_resource_lookup):
         """ Retrieves a set of documents matching a given request.
 
