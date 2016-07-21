@@ -41,11 +41,11 @@ class TestPostNeo4j(TestBaseNeo4j):
 
     # TODO: Implement Neo4j json encoder to parse milliseconds from graph to
     # datetime -> string or return datetime on node_to_dict
-    # def test_post_datetime(self):
-        # test_field = "born"
-        # test_value = "Tue, 06 Nov 2012 10:33:31 GMT"
-        # data = {test_field: test_value}
-        # self.assertPostItem(data, test_field, test_value)
+    def test_post_datetime(self):
+        test_field = "born"
+        test_value = "Tue, 06 Nov 2012 10:33:31 GMT"
+        data = {test_field: test_value}
+        self.assertPostItem(data, test_field, test_value)
 
     def test_post_default_value(self):
         test_field = 'title'

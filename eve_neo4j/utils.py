@@ -7,15 +7,31 @@ from eve.utils import config
 from py2neo import Node
 
 
-def node_to_dict(node):
-    node = dict(node)
-    if config.DATE_CREATED in node:
-        node[config.DATE_CREATED] = datetime.fromtimestamp(
-            node[config.DATE_CREATED])
+def resource_for_label(label):
+    """
+    Return resource for the given label.
 
-    if config.LAST_UPDATED in node:
-        node[config.LAST_UPDATED] = datetime.fromtimestamp(
-            node[config.LAST_UPDATED])
+    :param label:
+    """
+    for k, v in  config.DOMAIN.items():
+        if (v['datasource'] and v['datasource'].get('source') == label) or \
+                k == label:
+            return k
+
+def node_to_dict(node):
+    """
+    Convert a Node to a dict.
+    Parse datetime fields from timestamp to datetime objects.
+
+    :param node: Node to be parsed.
+    """
+    resource = resource_for_label(list(node.labels())[0])
+    schema = config.DOMAIN[resource]['schema']
+    node = dict(node)
+    for k, v in node.items():
+        if k == config.DATE_CREATED or k == config.LAST_UPDATED or \
+                schema.get(k, {}).get('type') == 'datetime':
+            node[k] = datetime.fromtimestamp(v)
 
     return node
 
