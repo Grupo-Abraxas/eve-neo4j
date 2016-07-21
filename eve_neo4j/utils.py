@@ -21,14 +21,12 @@ def node_to_dict(node):
 
 
 def dict_to_node(label, properties={}):
-    props = copy(properties)
-    if config.DATE_CREATED in props:
-        props[config.DATE_CREATED] = timestamp(props[config.DATE_CREATED])
+    _properties = copy(properties)
+    for k, v in _properties.items():
+        if isinstance(v, datetime):
+            _properties[k] = timestamp(v)
 
-    if config.LAST_UPDATED in props:
-        props[config.LAST_UPDATED] = timestamp(props[config.LAST_UPDATED])
-
-    return Node(label, **props)
+    return Node(label, **_properties)
 
 
 def timestamp(value):
