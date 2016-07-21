@@ -4,7 +4,7 @@ import uuid
 
 from datetime import datetime
 from eve.io.base import DataLayer
-from eve.utils import debug_error_message
+from eve.utils import debug_error_message, str_to_date
 from flask import abort
 from flask.ext import neo4j
 from py2neo import NodeSelector
@@ -17,6 +17,12 @@ from eve_neo4j.utils import label, id_field, dict_to_node, node_to_dict, \
 class Neo4j(DataLayer):
     """Neo4j data layer access for Eve REST API.
     """
+
+    serializers = {
+        'datetime': str_to_date,
+        'integer': lambda value: int(value) if value is not None else None,
+        'float': lambda value: float(value) if value is not None else None,
+    }
 
     def init_app(self, app):
         """Initialize Neo4j.
