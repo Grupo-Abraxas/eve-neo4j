@@ -3,8 +3,6 @@ ITEM_LOOKUP = True
 ITEM_LOOKUP_FIELD = ID_FIELD
 ITEM_URL = 'regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")'
 
-ALLOW_UNKNOWN = True
-
 GRAPH_DATABASE = 'http://localhost:7474/db/data/'
 GRAPH_USER = 'neo4j'
 GRAPH_PASSWORD = 'admin'
@@ -31,9 +29,21 @@ people = {
         'firstname': {
             'type': 'string'
         },
+        'lastname': {
+            'type': 'string'
+        },
         'title': {
             'type': 'string',
             'default': 'Mr.'
+        },
+        'born': {
+            'type': 'datetime',
+            'required': False
+        },
+        'ref': {
+            'type': 'string',
+            'minlength': 25,
+            'maxlength': 25,
         }
     }
 }
@@ -51,7 +61,13 @@ users_overseas = copy.deepcopy(users)
 users_overseas['url'] = 'users/overseas'
 users_overseas['datasource'] = {'source': 'people'}
 
-invoices = {}
+invoices = {
+    'schema': {
+        'number': {
+            'type': 'number'
+        }
+    }
+}
 
 user_invoices = copy.deepcopy(invoices)
 user_invoices['url'] = 'users/<regex("[0-9]+"):people>/invoices'
