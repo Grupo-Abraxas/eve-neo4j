@@ -46,4 +46,4 @@ deploy:
   on:
     tags: true
     repo: Abraxas-Biosystems/eve-neo4j
-    condition: $TOXENV == py35
+    # condition: $TOXENV == py35
