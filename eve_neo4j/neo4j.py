@@ -10,7 +10,7 @@ from flask.ext import neo4j
 from py2neo import NodeSelector
 
 from eve_neo4j.structures import Neo4jResultCollection
-from eve_neo4j.utils import label, id_field, dict_to_node, node_to_dict, \
+from eve_neo4j.utils import id_field, dict_to_node, node_to_dict, \
     timestamp
 
 
@@ -114,9 +114,9 @@ class Neo4j(DataLayer):
                             to the database.
         """
         indexes = []
-        lb = label(resource)
+        label, _, _, _ = self._datasource_ex(resource, [])
         for document in doc_or_docs:
-            node = dict_to_node(lb, document)
+            node = dict_to_node(label, document)
             _id = str(uuid.uuid4())
             node[id_field(resource)] = _id
             self.driver.graph.create(node)
