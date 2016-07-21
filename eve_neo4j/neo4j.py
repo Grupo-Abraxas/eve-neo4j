@@ -10,7 +10,7 @@ from flask.ext import neo4j
 from py2neo import NodeSelector
 
 from eve_neo4j.structures import Neo4jResultCollection
-from eve_neo4j.utils import id_field, dict_to_node, node_to_dict, \
+from eve_neo4j.utils import id_field, create_node, node_to_dict, \
     timestamp
 
 
@@ -116,7 +116,7 @@ class Neo4j(DataLayer):
         indexes = []
         label, _, _, _ = self._datasource_ex(resource, [])
         for document in doc_or_docs:
-            node = dict_to_node(label, document)
+            node = create_node(label, document)
             _id = str(uuid.uuid4())
             node[id_field(resource)] = _id
             self.driver.graph.create(node)
@@ -169,7 +169,7 @@ class Neo4j(DataLayer):
         self.driver.graph.delete(old_node)
 
         # create and insert the new one
-        node = dict_to_node(label, document)
+        node = create_node(label, document)
         node[id_field] = id_
         self.driver.graph.create(node)
 

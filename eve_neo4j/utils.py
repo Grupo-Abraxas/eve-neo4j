@@ -20,11 +20,28 @@ def node_to_dict(node):
     return node
 
 
-def dict_to_node(label, properties={}):
+def prepare_properties(properties):
+    """
+    Prepare properties for a node.
+
+    :param properties: dict with properties for a node.
+    """
     _properties = copy(properties)
     for k, v in _properties.items():
         if isinstance(v, datetime):
             _properties[k] = timestamp(v)
+
+    return _properties
+
+
+def create_node(label, properties={}):
+    """
+    Create a Node with the given properties using the given label.
+
+    :param label:
+    :param properties:
+    """
+    _properties = prepare_properties(properties)
 
     return Node(label, **_properties)
 
