@@ -96,3 +96,12 @@ class ValidatorNeo4j(Validator):
         """
         if isinstance(value, Mapping):
             return True
+
+    def _validate_datasource(self, datasource, field, value):
+        """Enables validation for `datasource` schema attribute.
+
+        :param datasource:
+        :param field:
+        :param value:
+        """
+        pass
