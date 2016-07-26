@@ -186,7 +186,22 @@ class Neo4j(DataLayer):
         """
         datasource, filter_, _, _ = self._datasource_ex(resource, lookup)
         nodes = self.driver.select(datasource, **filter_)
+
+        matches = []
+        deletes = []
+        parameters = {}
+
         tx = self.driver.graph.begin()
-        for node in nodes:
-            tx.delete(node)
+        for i, node in enumerate(nodes):
+            remote_node = node.__remote__
+            if remote_node:
+                node_id = 'a%d' % i
+                param_id = 'x%d' % i
+                matches.append('MATCH (%s) '
+                    'WHERE id(%s)={%s}' % (node_id, node_id, param_id))
+                deletes.append('DETACH DELETE %s' % node_id)
+                parameters[param_id] = remote_node._id
+                del node.__remote__
+        statement = '\n'.join(matches + deletes)
+        tx.run(statement, parameters)
         tx.commit()
