@@ -13,10 +13,11 @@ def resource_for_label(label):
 
     :param label:
     """
-    for k, v in  config.DOMAIN.items():
+    for k, v in config.DOMAIN.items():
         if (v['datasource'] and v['datasource'].get('source') == label) or \
                 k == label:
             return k
+
 
 def node_to_dict(node):
     """

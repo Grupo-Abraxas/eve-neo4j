@@ -16,8 +16,17 @@ people = {
     'cache_expires': 10,
     'resource_methods': ['GET', 'POST', 'DELETE'],
     'schema': {
-        'invoices_collection': {
-            'type': 'objectid',
+        'invoices': {
+            'type': 'relation',
+            'datasource': {'source': 'has_invoice'},
+            'schema': {
+                'name': {
+                    'type': 'string'
+                },
+                'prog': {
+                    'type': 'number'
+                }
+            },
             'data_relation': {
                 'embeddable': True,
                 'resource': 'invoices'

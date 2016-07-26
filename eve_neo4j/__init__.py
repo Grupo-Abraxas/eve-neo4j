@@ -6,3 +6,4 @@ __version__ = '0.1.0'
 
 # flake8: noqa
 from eve_neo4j.neo4j import Neo4j
+from eve_neo4j.validation import ValidatorNeo4j
