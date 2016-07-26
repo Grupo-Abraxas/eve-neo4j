@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime
 from eve import ETAG
 from eve.tests import TestMinimal
-from py2neo import Node
+from py2neo import Node, Relationship
 
 from eve_neo4j import Neo4j
 
@@ -88,6 +88,7 @@ class TestBaseNeo4j(TestMinimal):
                 schema.drop_uniqueness_constraint(label, property_)
 
     def bulk_insert(self):
+        tx = self.graph.begin()
         people = self.random_people(self.known_resource_count)
         people = [Node(self.known_resource, **item) for item in people]
         for person in people:
@@ -99,7 +100,7 @@ class TestBaseNeo4j(TestMinimal):
             person['_created'] = dt
             person['_updated'] = dt
             person['_id'] = str(uuid.uuid4())
-            self.graph.create(person)
+            tx.create(person)
 
         # load random invoice
         try:
@@ -108,11 +109,11 @@ class TestBaseNeo4j(TestMinimal):
             import time
             dt = time.mktime(datetime.now().timetuple())
         invoice = Node('invoice', number=random.randint(0, 100))
-        invoice['people_id'] = people[0]['_id']
         invoice['_created'] = dt
         invoice['_updated'] = dt
         invoice['_id'] = str(uuid.uuid4())
-        self.graph.create(invoice)
+        relation = Relationship(person, 'has_invoice', invoice)
+        tx.create(invoice | relation)
 
         # load random payments
         for _ in range(10):
@@ -127,7 +128,8 @@ class TestBaseNeo4j(TestMinimal):
             payment['_created'] = dt
             payment['_updated'] = dt
             payment['_id'] = str(uuid.uuid4())
-            self.graph.create(payment)
+            tx.create(payment)
+        tx.commit()
 
     def random_string(self, length=6):
         return ''.join(random.choice(string.ascii_lowercase)
