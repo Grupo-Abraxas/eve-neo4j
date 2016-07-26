@@ -11,7 +11,7 @@ from eve import ETAG
 from eve.tests import TestMinimal
 from py2neo import Node, Relationship
 
-from eve_neo4j import Neo4j
+from eve_neo4j import Neo4j, ValidatorNeo4j
 
 
 class TestBaseNeo4j(TestMinimal):
@@ -25,7 +25,8 @@ class TestBaseNeo4j(TestMinimal):
         self.app = eve.Eve(
             settings=self.settings_file,
             url_converters=url_converters,
-            data=Neo4j)
+            data=Neo4j,
+            validator=ValidatorNeo4j)
         self.domain = self.app.config['DOMAIN']
         self.known_resource_count = 101
         self.known_resource = 'people'
