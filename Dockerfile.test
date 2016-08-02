@@ -1,0 +1,10 @@
+FROM python:3.5
+
+ENV TOXENV py35
+
+RUN pip install tox
+
+ADD . /app
+WORKDIR /app
+
+CMD tox -e $TOXENV

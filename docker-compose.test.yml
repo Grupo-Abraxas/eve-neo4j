@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  sut:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    links:
+      - graph
+    environment:
+      - TOXENV
+  graph:
+    image: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/admin

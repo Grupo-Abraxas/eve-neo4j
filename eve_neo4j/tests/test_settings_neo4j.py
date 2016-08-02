@@ -3,7 +3,7 @@ ITEM_LOOKUP = True
 ITEM_LOOKUP_FIELD = ID_FIELD
 ITEM_URL = 'regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")'
 
-GRAPH_DATABASE = 'http://localhost:7474/db/data/'
+GRAPH_DATABASE = 'http://graph:7474/db/data/'
 GRAPH_USER = 'neo4j'
 GRAPH_PASSWORD = 'admin'
 
