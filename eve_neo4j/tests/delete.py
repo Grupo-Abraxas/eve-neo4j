@@ -1,12 +1,3 @@
-from eve.tests.utils import DummyEvent
-from eve.tests.test_settings import MONGO_DBNAME
-from eve import ETAG
-from bson import ObjectId
-from eve.utils import ParsedRequest
-import simplejson as json
-import copy
-
-from eve.methods.delete import deleteitem_internal
 from eve_neo4j.tests import TestBaseNeo4j
 
 

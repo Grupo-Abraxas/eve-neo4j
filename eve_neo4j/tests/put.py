@@ -1,12 +1,4 @@
-from bson import ObjectId
-import simplejson as json
-
-from eve.tests import TestBase
-from eve.tests.test_settings import MONGO_DBNAME
-from eve.tests.utils import DummyEvent
-
 from eve import STATUS_OK, LAST_UPDATED, ISSUES, STATUS, ETAG
-from eve.methods.put import put_internal
 
 from eve_neo4j.tests import TestBaseNeo4j
 

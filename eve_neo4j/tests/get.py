@@ -1,7 +1,6 @@
-import datetime
 import json
 
-from eve.utils import date_to_str, str_to_date
+from eve.utils import str_to_date
 from py2neo import Node
 
 from eve_neo4j.tests import TestBaseNeo4j

@@ -1,11 +1,6 @@
-from bson import ObjectId
 import simplejson as json
 
 from eve import STATUS_OK, LAST_UPDATED, ISSUES, STATUS, ETAG
-from eve.methods.patch import patch_internal
-from eve.tests import TestBase
-from eve.tests.test_settings import MONGO_DBNAME
-from eve.tests.utils import DummyEvent
 
 from eve_neo4j.tests import TestBaseNeo4j
 
@@ -17,7 +12,7 @@ class TestPatch(TestBaseNeo4j):
         test_value = 'Douglas'
         changes = {field: test_value}
         r = self.perform_patch(changes)
-        db_value = self.compare_patch_with_get(field, r)
+        self.compare_patch_with_get(field, r)
 
     def test_patch_integer(self):
         field = "prog"
