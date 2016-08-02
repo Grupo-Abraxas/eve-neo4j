@@ -192,6 +192,6 @@ class Neo4j(DataLayer):
             remote_node = node.__remote__
             if remote_node:
                 statement = 'MATCH (_) WHERE id(_)={node_id} DETACH DELETE _'
-                tx.run(statement, node_id = remote_node._id)
+                tx.run(statement, node_id=remote_node._id)
                 del node.__remote__
         tx.commit()
