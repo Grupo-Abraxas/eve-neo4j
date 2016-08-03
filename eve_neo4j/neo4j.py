@@ -2,7 +2,6 @@
 import json
 import uuid
 
-from datetime import datetime
 from eve.io.base import DataLayer
 from eve.utils import debug_error_message, str_to_date
 from flask import abort
@@ -11,7 +10,7 @@ from py2neo import NodeSelector
 
 from eve_neo4j.structures import Neo4jResultCollection
 from eve_neo4j.utils import id_field, create_node, node_to_dict, \
-    timestamp
+    prepare_properties
 
 
 class Neo4j(DataLayer):
@@ -139,11 +138,8 @@ class Neo4j(DataLayer):
         node = self.driver.select(label, **filter_).first()
         if node is None:
             abort(500, description=debug_error_message('Object not existent'))
-        # node = node_to_dict(node)
-        for k, v in updates.items():
-            if isinstance(v, datetime):
-                v = timestamp(v)
-            node[k] = v
+        properties = prepare_properties(updates)
+        node.update(**properties)
         self.driver.graph.push(node)
 
     def replace(self, resource, id_, document, original):

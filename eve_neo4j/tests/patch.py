@@ -40,6 +40,22 @@ class TestPatch(TestBaseNeo4j):
         db_value = self.compare_patch_with_get(field, r)
         self.assertEqual(db_value, test_value)
 
+    def test_patch_dict(self):
+        field = "address"
+        test_value = {'address': 'an address', 'city': 'a city'}
+        changes = {field: test_value}
+        original_city = []
+
+        def keep_original_city(resource_name, updates, original):
+            original_city.append(original['address']['city'])
+
+        self.app.on_update += keep_original_city
+        self.app.on_updated += keep_original_city
+        r = self.perform_patch(changes)
+        db_value = self.compare_patch_with_get(field, r)
+        self.assertEqual(db_value, test_value)
+        self.assertEqual(original_city[0], original_city[1])
+
     def test_patch_datetime(self):
         field = "born"
         test_value = "Tue, 06 Nov 2012 10:33:31 GMT"

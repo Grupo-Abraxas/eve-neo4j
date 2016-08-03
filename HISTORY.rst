@@ -2,6 +2,10 @@
 History
 =======
 
+---
+
+- Fix: dict data type on update.
+
 0.1.3
 ------------------
 
