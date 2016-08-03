@@ -7,6 +7,7 @@ python:
 branches:
     only:
     - master
+    - /v\d+.\d+.\d+[a-z]/
 
 services:
 - docker
