@@ -21,7 +21,7 @@ test_requirements = [
 
 setup(
     name='eve_neo4j',
-    version='0.1.2',
+    version='0.1.3',
     description="Eve Neo4j extension.",
     long_description=readme + '\n\n' + history,
     author="Rodrigo Rodriguez",
