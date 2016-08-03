@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
 import time
 
+from collections import Mapping
 from copy import copy
 from datetime import datetime
 from eve.utils import config
@@ -33,6 +35,8 @@ def node_to_dict(node):
         if k == config.DATE_CREATED or k == config.LAST_UPDATED or \
                 schema.get(k, {}).get('type') == 'datetime':
             node[k] = datetime.fromtimestamp(v)
+        if schema.get(k, {}).get('type') == 'dict':
+            node[k] = json.loads(v)
 
     return node
 
@@ -47,6 +51,8 @@ def prepare_properties(properties):
     for k, v in _properties.items():
         if isinstance(v, datetime):
             _properties[k] = timestamp(v)
+        if isinstance(v, Mapping):
+            _properties[k] = json.dumps(v)
 
     return _properties
 
