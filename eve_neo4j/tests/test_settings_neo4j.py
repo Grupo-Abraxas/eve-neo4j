@@ -53,6 +53,13 @@ people = {
             'type': 'string',
             'minlength': 25,
             'maxlength': 25,
+        },
+        'address': {
+            'type': 'dict',
+            'schema': {
+                'address': {'type': 'string'},
+                'city': {'type': 'string'}
+            }
         }
     }
 }

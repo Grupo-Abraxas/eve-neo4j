@@ -39,6 +39,12 @@ class TestPostNeo4j(TestBaseNeo4j):
         data = {test_field: test_value}
         self.assertPostItem(data, test_field, test_value)
 
+    def test_post_dict(self):
+        test_field = 'address'
+        test_value = {'address': 'an address', 'city': 'a city'}
+        data = {test_field: test_value}
+        self.assertPostItem(data, test_field, test_value)
+
     # TODO: Implement Neo4j json encoder to parse milliseconds from graph to
     # datetime -> string or return datetime on node_to_dict
     def test_post_datetime(self):
