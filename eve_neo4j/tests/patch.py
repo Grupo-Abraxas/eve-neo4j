@@ -7,6 +7,24 @@ from eve_neo4j.tests import TestBaseNeo4j
 
 class TestPatch(TestBaseNeo4j):
 
+    def test_patch_to_resource_endpoint(self):
+        _, status = self.patch(self.known_resource_url, data={})
+        self.assert405(status)
+
+    def test_readonly_resource(self):
+        _, status = self.patch(self.readonly_id_url, data={})
+        self.assert405(status)
+
+    def test_ifmatch_missing(self):
+        _, status = self.patch(self.item_id_url, data={'key1': 'value1'})
+        self.assert403(status)
+
+    def test_ifmatch_bad_etag(self):
+        _, status = self.patch(self.item_id_url,
+                               data={'key1': 'value1'},
+                               headers=[('If-Match', 'not-quite-right')])
+        self.assert412(status)
+
     def test_patch_string(self):
         field = 'firstname'
         test_value = 'Douglas'
@@ -17,6 +35,14 @@ class TestPatch(TestBaseNeo4j):
     def test_patch_integer(self):
         field = "prog"
         test_value = 9999
+        changes = {field: test_value}
+        r = self.perform_patch(changes)
+        db_value = self.compare_patch_with_get(field, r)
+        self.assertEqual(db_value, test_value)
+
+    def test_patch_datetime(self):
+        field = "born"
+        test_value = "Tue, 06 Nov 2012 10:33:31 GMT"
         changes = {field: test_value}
         r = self.perform_patch(changes)
         db_value = self.compare_patch_with_get(field, r)
