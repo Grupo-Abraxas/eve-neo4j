@@ -18,18 +18,9 @@ people = {
     'schema': {
         'invoices': {
             'type': 'relation',
-            'datasource': {'source': 'has_invoice'},
-            'schema': {
-                'name': {
-                    'type': 'string'
-                },
-                'prog': {
-                    'type': 'number'
-                }
-            },
             'data_relation': {
                 'embeddable': True,
-                'resource': 'invoices'
+                'resource': 'has_invoice'
             }
         },
         'prog': {
@@ -86,9 +77,23 @@ invoices = {
     }
 }
 
-user_invoices = copy.deepcopy(invoices)
-user_invoices['url'] = 'users/<regex("[0-9]+"):people>/invoices'
-user_invoices['datasource'] = {'source': 'invoices'}
+user_invoices = {
+    'datasource': {
+        'source': 'has_invoice',
+        'type': 'relation'
+    },
+    'schema': {
+        'start_node': {
+            'type': 'nodeid'
+        },
+        'end_node': {
+            'type': 'nodeid'
+        },
+        'relation_property': {
+            'type': 'string'
+        }
+    }
+}
 
 payments = {
     'resource_methods': ['GET'],
