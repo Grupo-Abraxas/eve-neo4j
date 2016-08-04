@@ -35,6 +35,12 @@ class ValidatorNeo4j(Validator):
             if count_selection(selected) > 0:
                 self._error(field, "value '%s' is not unique" % value)
 
+    def _validate_type_nodeid(self, field, value):
+        pass
+
+    def _validate_type_relation(self, field, value):
+        pass
+
     # Override validation for Mongo fields
     def _validate_type_objectid(self, field, value):
         self._error(field, "field objectid is not valid on Neo4j.")
