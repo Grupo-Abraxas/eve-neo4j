@@ -5,6 +5,7 @@ History
 ---
 
 - Fix: dict data type on update.
+- Fix: Use internal remove method to delete old node.
 
 0.1.3
 ------------------

@@ -162,7 +162,7 @@ class Neo4j(DataLayer):
         # Delete the old node
         if old_node is None:
             abort(500, description=debug_error_message('Object not existent'))
-        self.driver.graph.delete(old_node)
+        self.remove(resource, filter_)
 
         # create and insert the new one
         node = create_node(label, document)
