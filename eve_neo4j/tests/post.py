@@ -80,17 +80,17 @@ class TestPostNeo4j(TestBaseNeo4j):
             {"firstname": self.item_firstname, "lastname": 'Adams'}
         ]
         r, status = self.post(self.known_resource_url, data=data)
-        # self.assertEqual(status, 422)
+        self.assertEqual(status, 422)
         results = r['_items']
 
         self.assertEqual(results[0]['_status'], 'OK')
         self.assertEqual(results[1]['_status'], 'OK')
 
         # TODO: Implement Neo4j validator.
-        # self.assertValidationError(results[2], {'firstname': 'unique'})
+        self.assertValidationError(results[2], {'firstname': 'unique'})
 
-        # self.assertTrue(ID_FIELD not in results[0])
-        # self.assertTrue(ID_FIELD not in results[1])
+        self.assertTrue(ID_FIELD not in results[0])
+        self.assertTrue(ID_FIELD not in results[1])
 
         # items on which validation failed should not be inserted into the db
         _, status = self.get(self.known_resource_url,

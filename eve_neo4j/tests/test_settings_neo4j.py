@@ -36,7 +36,8 @@ people = {
             'type': 'integer'
         },
         'firstname': {
-            'type': 'string'
+            'type': 'string',
+            'unique': True
         },
         'lastname': {
             'type': 'string'

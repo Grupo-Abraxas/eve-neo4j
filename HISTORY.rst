@@ -6,6 +6,7 @@ History
 
 - Fix: dict data type on update.
 - Fix: Use internal remove method to delete old node.
+- Feature: Implement unique validation.
 
 0.1.3
 ------------------
