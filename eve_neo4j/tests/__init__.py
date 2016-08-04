@@ -12,6 +12,7 @@ from eve.tests import TestMinimal
 from py2neo import Node, Relationship
 
 from eve_neo4j import Neo4j, ValidatorNeo4j
+from eve_neo4j.utils import create_node
 
 
 class TestBaseNeo4j(TestMinimal):
@@ -88,20 +89,19 @@ class TestBaseNeo4j(TestMinimal):
             for property_ in schema.get_uniqueness_constraints(label):
                 schema.drop_uniqueness_constraint(label, property_)
 
+    def add_control_fields(self, entity):
+        dt = datetime.now()
+        entity['_created'] = dt
+        entity['_updated'] = dt
+        entity['_id'] = str(uuid.uuid4())
+
     def bulk_insert(self):
         tx = self.graph.begin()
         people = self.random_people(self.known_resource_count)
-        people = [Node(self.known_resource, **item) for item in people]
-        for person in people:
-            try:
-                dt = datetime.now().timestamp()
-            except AttributeError:
-                import time
-                dt = time.mktime(datetime.now().timetuple())
-            person['_created'] = dt
-            person['_updated'] = dt
-            person['_id'] = str(uuid.uuid4())
-            tx.create(person)
+        [self.add_control_fields(person) for person in people]
+        people = [
+            create_node(self.known_resource, person) for person in people]
+        [tx.create(person) for person in people]
 
         # load random invoice
         try:
@@ -113,7 +113,7 @@ class TestBaseNeo4j(TestMinimal):
         invoice['_created'] = dt
         invoice['_updated'] = dt
         invoice['_id'] = str(uuid.uuid4())
-        relation = Relationship(person, 'has_invoice', invoice)
+        relation = Relationship(people[0], 'has_invoice', invoice)
         tx.create(invoice | relation)
 
         # load random payments
@@ -136,11 +136,19 @@ class TestBaseNeo4j(TestMinimal):
         return ''.join(random.choice(string.ascii_lowercase)
                        for _ in range(length)).capitalize()
 
+    def random_address(self):
+        return {
+            'address': self.random_string(),
+            'city': self.random_string()
+        }
+
     def random_people(self, num):
         people = []
         for i in range(num):
-            people.append({
+            person = {
                 'firstname': self.random_string(6),
-                'lastname': self.random_string(6)
-            })
+                'lastname': self.random_string(6),
+                'address': self.random_address()
+            }
+            people.append(person)
         return people
