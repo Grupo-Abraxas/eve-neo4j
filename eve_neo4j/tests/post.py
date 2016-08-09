@@ -228,6 +228,36 @@ class TestPostNeo4j(TestBaseNeo4j):
         self.assertPostResponse(r)
         self.assertTrue('number' in r)
 
+    def test_post_create_relation(self):
+        invoice_data = {'number': random.randint(1000, 10000)}
+
+        # create new invoice
+        invoice, status = self.post('/invoices/', data=invoice_data)
+        self.assert201(status)
+        self.assertPostResponse(invoice)
+        self.assertTrue('_id' in invoice)
+
+        # create (person)-[:has_invoice]->(invoice) relation wirth know item.
+        relation_data = {
+            'start_node': self.item_id,
+            'end_node': invoice['_id'],
+            'relation_property': 'test_value'
+        }
+
+        r, status = self.post('/userinvoices/', data=relation_data)
+        self.assert201(status)
+        self.assertPostResponse(r)
+        self.assertTrue('_id' in r)
+
+        # check type of created entity
+        selector = self.app.data.driver
+        graph = selector.graph
+        start_node = selector.select('people', _id=self.item_id).first()
+        end_node = selector.select('invoices', _id=invoice['_id']).first()
+
+        relations = list(graph.match(start_node, 'has_invoice', end_node))
+        self.assertEqual(len(relations), 1)
+
     def perform_post(self, data, valid_items=[0]):
         r, status = self.post(self.known_resource_url, data=data)
         self.assert201(status)

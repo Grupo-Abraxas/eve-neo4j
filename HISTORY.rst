@@ -2,8 +2,10 @@
 History
 =======
 
----
+0.1.4
+-----------------
 
+- Feature: Create relations.
 - Fix: dict data type on update.
 - Fix: Use internal remove method to delete old node.
 - Feature: Implement unique validation.

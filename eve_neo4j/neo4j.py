@@ -3,14 +3,13 @@ import json
 import uuid
 
 from eve.io.base import DataLayer
-from eve.utils import debug_error_message, str_to_date
+from eve.utils import config, debug_error_message, str_to_date
 from flask import abort
 from flask.ext import neo4j
-from py2neo import NodeSelector
+from py2neo import NodeSelector, Relationship
 
 from eve_neo4j.structures import Neo4jResultCollection
-from eve_neo4j.utils import id_field, create_node, node_to_dict, \
-    prepare_properties
+from eve_neo4j.utils import create_node, node_to_dict, prepare_properties
 
 
 class Neo4j(DataLayer):
@@ -29,7 +28,22 @@ class Neo4j(DataLayer):
         graph = neo4j.Neo4j(app).gdb
         self.driver = NodeSelector(graph)
 
+        self.set_defaults(app)
+
         self.register_schema(app)
+
+    def set_defaults(self, app):
+        """Fill individual resource settings with default settings.
+        """
+        for resource, settings in app.config['DOMAIN'].items():
+            self._set_resource_defaults(resource, settings)
+
+    def _set_resource_defaults(self, resource, settings):
+        """Low-level method which sets default values for one resource.
+        """
+        settings.setdefault('datasource', {})
+        ds = settings['datasource']
+        ds.setdefault('relation', False)
 
     def register_schema(self, app):
         """Register schema for Neo4j indexes.
@@ -105,6 +119,12 @@ class Neo4j(DataLayer):
         document = self.driver.select(resource, **lookup).first()
         return node_to_dict(document) if document else None
 
+    def _node_by_id(self, nodeid, resource):
+        label, _, _, _ = self._datasource_ex(resource, [])
+        id_field = config.DOMAIN[resource]['id_field']
+        lookup = {id_field: nodeid}
+        return self.driver.select(label, **lookup).first()
+
     def insert(self, resource, doc_or_docs):
         """ Inserts a document as a node with a label.
 
@@ -114,12 +134,31 @@ class Neo4j(DataLayer):
         """
         indexes = []
         label, _, _, _ = self._datasource_ex(resource, [])
+        id_field = config.DOMAIN[resource]['id_field']
+        relation = config.DOMAIN[resource]['datasource']['relation']
+        schema = config.DOMAIN[resource]['schema']
+
+        tx = self.driver.graph.begin()
         for document in doc_or_docs:
-            node = create_node(label, document)
-            _id = str(uuid.uuid4())
-            node[id_field(resource)] = _id
-            self.driver.graph.create(node)
-            indexes.append(_id)
+            if relation:
+                properties = prepare_properties(document)
+                start_node = self._node_by_id(
+                    properties.pop('start_node'),
+                    schema['start_node']['data_relation']['resource'])
+                end_node = self._node_by_id(
+                    properties.pop('end_node'),
+                    schema['end_node']['data_relation']['resource'])
+                relation = Relationship(
+                    start_node, label, end_node, **properties)
+                relation[id_field] = str(uuid.uuid4())
+                tx.create(relation)
+                indexes.append(relation[id_field])
+            else:
+                node = create_node(label, document)
+                node[id_field] = str(uuid.uuid4())
+                tx.create(node)
+                indexes.append(node[id_field])
+        tx.commit()
         return indexes
 
     def update(self, resource, id_, updates, original):
@@ -133,7 +172,7 @@ class Neo4j(DataLayer):
         change from the supplied `original` parameter.
         """
         label, _, _, _ = self._datasource_ex(resource, [])
-        id_field = self.app.config['ID_FIELD']
+        id_field = config.DOMAIN[resource]['id_field']
         filter_ = {id_field: id_}
         node = self.driver.select(label, **filter_).first()
         if node is None:
@@ -155,7 +194,7 @@ class Neo4j(DataLayer):
                                      parameter.
         """
         label, _, _, _ = self._datasource_ex(resource, [])
-        id_field = self.app.config['ID_FIELD']
+        id_field = config.DOMAIN[resource]['id_field']
         filter_ = {id_field: id_}
         old_node = self.driver.select(label, **filter_).first()
 
