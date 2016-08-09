@@ -21,7 +21,8 @@ people = {
             'data_relation': {
                 'embeddable': True,
                 'resource': 'has_invoice'
-            }
+            },
+            'required': False
         },
         'prog': {
             'type': 'integer'
@@ -80,14 +81,16 @@ invoices = {
 user_invoices = {
     'datasource': {
         'source': 'has_invoice',
-        'type': 'relation'
+        'relation': True
     },
     'schema': {
         'start_node': {
-            'type': 'nodeid'
+            'type': 'nodeid',
+            'data_relation': {'resource': 'people'}
         },
         'end_node': {
-            'type': 'nodeid'
+            'type': 'nodeid',
+            'data_relation': {'resource': 'invoices'}
         },
         'relation_property': {
             'type': 'string'
