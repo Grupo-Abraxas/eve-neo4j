@@ -56,7 +56,7 @@ Set neo4j as your eve data layer.
 Config
 ------
 
-Add the following to your `settings.py`. (See Eve's `Quick Start <http://python-eve.org/quickstart.html>`_)
+Add the following to your `settings.py <http://python-eve.org/quickstart.html>`_
 
 .. code-block:: python
 
