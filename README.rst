@@ -56,11 +56,13 @@ Set neo4j as your eve data layer.
 Config
 ------
 
+Add the following to your `settings.py`. (See Eve's `Quick Start <http://python-eve.org/quickstart.html>`_)
+
 .. code-block:: python
 
     GRAPH_DATABASE = 'http://localhost:7474/db/data/'
     GRAPH_USER = 'neo4j'
     GRAPH_PASSWORD = 'neo4j'
 
-    # TODO: Override this as a defautl when ussing Neo4j as datalayer
+    # TODO: Override this as a default when using Neo4j as a data layer
     ITEM_URL = 'regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")'
