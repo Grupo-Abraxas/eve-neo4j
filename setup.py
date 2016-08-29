@@ -31,7 +31,7 @@ setup(
         'eve_neo4j',
     ],
     dependency_links = [
-        'http://github.com/rodrigorn/flask-neo4j/tarball/master#egg=flask-neo4j'
+        'http://github.com/lashex/flask-neo4j/tarball/master#egg=flask-neo4j'
     ],
     package_dir={'eve_neo4j':
                  'eve_neo4j'},
